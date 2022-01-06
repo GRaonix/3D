@@ -1,0 +1,106 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+<html>
+<head>
+    <title>Becode.org</title>
+    <style>
+        body { margin: 0; overflow:hidden;}
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+<script>
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera( 100, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    camera.position.y = 24;
+
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    var diameter = 20;
+    var radialSegments = 33;
+    var geometry = new THREE.CylinderGeometry( diameter, diameter, 5, radialSegments );
+    
+    var img1 = "https://i.imgur.com/hBJ4JDd.jpg";//front face
+    var img2 = "https://i.imgur.com/ALgmTbP.jpg";
+    var img3 = "https://i.imgur.com/ALgmTbP.jpg";
+
+    var img4 = "env1"
+    var img5 = "env2"
+    var img7 = "env3"
+    var img8 = "env4"
+    var img9 = "env5"
+    var img10 = "env6"
+
+    var texture1 = new THREE.TextureLoader().load( img1 );
+    var texture2 = new THREE.TextureLoader().load( img2 );
+    var texture3 = new THREE.TextureLoader().load( img3 );
+
+    var env1 = new THREE.TextureLoader().load( img3 );
+    var env2 = new THREE.TextureLoader().load( img3 );
+    var env3 = new THREE.TextureLoader().load( img3 );
+    var env4 = new THREE.TextureLoader().load( img3 );
+    var env5 = new THREE.TextureLoader().load( img3 );
+    var env6 = new THREE.TextureLoader().load( img3 );
+    
+
+            const path = "https://threejs.org/examples/textures/cube/SwedishRoyalCastle/";
+				const format = '.jpg';
+				const urls = [
+					path + 'px' + format, path + 'nx' + format,
+					path + 'py' + format, path + 'ny' + format,
+					path + 'pz' + format, path + 'nz' + format
+				];
+
+    THREE.DefaultLoadingManager.onLoad = function () {
+        var materials = [];
+        const settings = {
+				metalness: 1.0,
+				roughness: 0.4,
+				ambientIntensity: 0.2,
+				aoMapIntensity: 1.0,
+				envMapIntensity: 1.0,
+				displacementScale: 1, // from original model
+				normalScale: 1.0
+			};
+
+                 
+        
+// each
+
+
+        materials.push(new THREE.MeshBasicMaterial({ map: texture1, metalness: 1.0, roughness: 0.4 }));
+        materials.push(new THREE.MeshBasicMaterial({ map: texture2, metalness: 1.0, roughness: 0.4 }));
+        materials.push(new THREE.MeshBasicMaterial({ map: texture3, metalness: 1.0, roughness: 0.4 }));
+        
+        
+        
+        var l = geometry.faces.length;
+        for (var i = 0; i < l; i++) {
+            if (geometry.faces[i].normal.y !== 0) {
+                // these are caps
+                geometry.faces[i].materialIndex = 0;
+            } else {
+                // each segment has 2 faces
+                geometry.faces[i].materialIndex = 2;
+            }
+        }
+
+        var cylinder = new THREE.Mesh( geometry, materials);
+        cylinder.position.y = 25;
+        
+        scene.add( cylinder);
+
+        camera.position.z = 40;
+        
+
+        function render() {
+            requestAnimationFrame(render);
+            cylinder.rotation.z += 0.005;
+            cylinder.rotation.x += 0.035;
+            renderer.render(scene, camera);
+        }
+        render();
+    }
+</script>
+</body>
